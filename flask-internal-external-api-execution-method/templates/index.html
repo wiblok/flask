@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <!-- ユーザー情報の入力フォームを追加 -->
+    <input id="name" type="text" placeholder="Enter name" />
+    <input id="age" type="number" placeholder="Enter age" />
+    <!-- ボタンを追加 -->
+    <button onclick="createUser()">Create User</button>
+
+    <!-- ユーザー情報の表示領域 -->
+    <div id="userInfo"></div>
+
+    <script>
+      async function createUser() {
+        const name = document.getElementById("name").value;
+        const age = document.getElementById("age").value;
+
+        const response = await fetch("http://localhost:5000/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: name, age: age }),
+        });
+
+        if (!response.ok) {
+          const message = await response.text();
+          throw new Error(`An error has occurred: ${message}`);
+        }
+
+        const user = await response.json();
+
+        // ユーザー情報をHTMLに出力
+        const userInfo = document.getElementById("userInfo");
+        userInfo.textContent = `Created User: Name - ${user.name}, Age - ${user.age}`;
+      }
+    </script>
+  </body>
+</html>
